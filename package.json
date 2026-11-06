@@ -1,0 +1,25 @@
+{
+  "name": "authlab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nx monorepo demonstrating 9 authentication / authorization mechanisms end to end",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "dev": "nx run-many -t dev --parallel=3",
+    "build": "nx run-many -t build",
+    "typecheck": "nx run-many -t typecheck",
+    "graph": "nx graph",
+    "redis": "docker compose up -d redis",
+    "docs": "tsx tools/gen-docs.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.24.0",
+    "nx": "^21.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

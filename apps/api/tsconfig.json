@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "types": ["node"], "noEmit": true, "baseUrl": "../..", "paths": {
+    "@authlab/core": ["libs/core/src/index.ts"],
+    "@authlab/shared": ["libs/shared/src/index.ts"]
+  } },
+  "include": ["src/**/*.ts"]
+}

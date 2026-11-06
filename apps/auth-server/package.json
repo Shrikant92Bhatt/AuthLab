@@ -1,0 +1,28 @@
+{
+  "name": "auth-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mock OAuth 2.0 Authorization Server, OpenID Provider and SAML 2.0 IdP",
+  "scripts": {
+    "dev": "tsx watch --tsconfig tsconfig.json src/main.ts",
+    "start": "node dist/main.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --packages=external --tsconfig=tsconfig.json --outfile=dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@authenio/samlify-node-xmllint": "^2.0.0",
+    "@authlab/core": "*",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.0.0",
+    "jose": "^5.9.0",
+    "pino-http": "^10.3.0",
+    "samlify": "^2.10.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0"
+  }
+}
