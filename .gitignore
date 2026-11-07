@@ -5,3 +5,5 @@ dist
 *.log
 .keys
 *.rdb
+.vercel
+.env.vercel

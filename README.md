@@ -73,6 +73,31 @@ Other commands: `npm run build` (esbuild bundles + Vite build, Nx-cached), `npm 
 Want to look inside Redis? Run `docker compose --profile tools up -d` and open RedisInsight on :5540. You'll see keys such as
 `sess:*`, `rt:*`, `rt:family:*`, `jwt:deny:*`, `apikey:*`, `digest:nonce:*`, `as:code:*`, `oauth:state:*`, `saml:req:*`, `rl:*`.
 
+## Deploy to Vercel
+
+AuthLab deploys as **two Vercel projects** from this one repo (both with Root Directory = repo root, Framework = Other):
+
+| Project | Build command | What it serves |
+|---|---|---|
+| web | `npm run vercel:web` | React UI as static files + `apps/api` as a function on `/api/*` (same origin, so cookies stay first-party) |
+| auth | `npm run vercel:auth` | `apps/auth-server` (OAuth2 AS / OIDC OP / SAML IdP) as one function |
+
+`tools/vercel-build.mts` writes Vercel's [Build Output API](https://vercel.com/docs/build-output-api/v3) to `.vercel/output`: esbuild bundles our TypeScript, `@vercel/nft` copies the npm packages it needs (including bcrypt's native binary).
+
+Serverless instances don't share a disk, so keys can't be generated at startup. Run `npm run keys` to write `.env.vercel` with fresh keys and secrets, then set these env vars:
+
+| Variable | web | auth |
+|---|---|---|
+| `NODE_ENV=production` | ✓ | ✓ |
+| `REDIS_URL` (or `KV_URL`, e.g. Upstash from the Vercel Marketplace) | ✓ | ✓ |
+| `WEB_ORIGIN` = `API_ORIGIN` = the web URL | ✓ | `WEB_ORIGIN` only |
+| `ISSUER` = the auth URL, and `VITE_AUTH_SERVER` (same value, used at build time) | ✓ | `ISSUER` only |
+| `OIDC_CLIENT_SECRET` (same value in both) | ✓ | ✓ |
+| `SESSION_SECRET`, `API_JWT_PRIVATE_KEY_PEM` | ✓ | |
+| `AUTH_SERVER_JWT_PRIVATE_KEY_PEM`, `IDP_SAML_KEY_PEM`, `IDP_SAML_CERT_PEM` | | ✓ |
+
+Deploy to **production** (or turn off Deployment Protection for previews): the API calls the auth server server-to-server, and a protected preview URL would answer with a Vercel login page.
+
 ## Standard practices implemented
 
 | Concern | How |
