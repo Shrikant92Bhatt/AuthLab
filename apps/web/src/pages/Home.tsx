@@ -22,17 +22,17 @@ export function Home() {
       <section className="panel">
         <h3>Comparison</h3>
         <div className="table-wrap">
-          <table>
+          <table className="compare">
             <thead><tr><th>Method</th><th>Kind</th><th>Answers</th><th>State</th><th>Best for</th><th>Avoid when</th></tr></thead>
             <tbody>
               {AUTH_METHODS.map((m) => (
                 <tr key={m.id}>
-                  <td><Link to={`/${m.id}`}>{m.title}</Link></td>
-                  <td><span className="pill cat">{m.category}</span></td>
-                  <td>{m.answers.join(', ')}</td>
-                  <td>{m.stateful ? 'Stateful' : 'Stateless'}</td>
-                  <td>{m.bestFor}</td>
-                  <td>{m.avoidWhen}</td>
+                  <td data-label="Method"><Link to={`/${m.id}`}>{m.title}</Link></td>
+                  <td data-label="Kind"><span className="pill cat">{m.category}</span></td>
+                  <td data-label="Answers">{m.answers.join(', ')}</td>
+                  <td data-label="State">{m.stateful ? 'Stateful' : 'Stateless'}</td>
+                  <td data-label="Best for">{m.bestFor}</td>
+                  <td data-label="Avoid when">{m.avoidWhen}</td>
                 </tr>
               ))}
             </tbody>

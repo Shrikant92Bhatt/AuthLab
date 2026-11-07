@@ -1,7 +1,7 @@
 import type React from 'react';
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { AUTH_METHODS } from '@authlab/shared';
 import { Home } from './pages/Home';
 import { BasicPage, DigestPage } from './pages/BasicDigest';
@@ -28,6 +28,12 @@ function ThemeSwitch() {
 }
 
 function App() {
+  const { pathname } = useLocation();
+  // On phones the method list is a sideways strip: keep the current page's tab in view.
+  useEffect(() => {
+    document.querySelector('.nav-links a.active')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [pathname]);
+
   return (
     <div className="layout">
       <nav className="sidebar">
@@ -35,12 +41,14 @@ function App() {
           <span className="mark" aria-hidden="true" />Auth<span className="lab">Lab</span>
           <span className="brand-tag">9 methods · live backend</span>
         </NavLink>
-        {AUTH_METHODS.map((m, i) => (
-          <NavLink key={m.id} to={`/${m.id}`}>
-            <span className="num">{String(i + 1).padStart(2, '0')}</span>
-            <span>{m.title}<small>{m.category}</small></span>
-          </NavLink>
-        ))}
+        <div className="nav-links">
+          {AUTH_METHODS.map((m, i) => (
+            <NavLink key={m.id} to={`/${m.id}`}>
+              <span className="num">{String(i + 1).padStart(2, '0')}</span>
+              <span>{m.title}<small>{m.category}</small></span>
+            </NavLink>
+          ))}
+        </div>
         <div className="sidebar-foot">
           <ThemeSwitch />
           <span className="legend"><span className="g">■</span> granted &nbsp; <span className="r">■</span> denied</span>
