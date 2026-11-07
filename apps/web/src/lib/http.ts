@@ -55,4 +55,5 @@ export async function call<T = any>(url: string, opts: CallOpts = {}): Promise<{
   return { status: res.status, body: parsed as T, headers: res.headers };
 }
 
-export const AUTH_SERVER = 'http://localhost:4000';
+/** Set VITE_AUTH_SERVER at build time when the auth server isn't on localhost (e.g. on Vercel). */
+export const AUTH_SERVER: string = import.meta.env.VITE_AUTH_SERVER ?? 'http://localhost:4000';

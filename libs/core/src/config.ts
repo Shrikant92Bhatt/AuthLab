@@ -27,6 +27,7 @@ const EnvSchema = z.object({
 });
 
 /** Validated, typed environment. Fails fast on bad config (12-factor). */
-export const env = EnvSchema.parse(process.env);
+// Vercel's Redis integrations expose the connection string under different names.
+export const env = EnvSchema.parse({ ...process.env, REDIS_URL: process.env.REDIS_URL ?? process.env.KV_URL });
 export type Env = z.infer<typeof EnvSchema>;
 export const isProd = env.NODE_ENV === 'production';
