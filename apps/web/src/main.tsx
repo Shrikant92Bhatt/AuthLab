@@ -19,13 +19,17 @@ function App() {
   return (
     <div className="layout">
       <nav className="sidebar">
-        <NavLink to="/" end className="brand">🔐 AuthLab</NavLink>
+        <NavLink to="/" end className="brand">
+          <span className="mark" aria-hidden="true" />Auth<span className="lab">Lab</span>
+          <span className="brand-tag">9 methods · live backend</span>
+        </NavLink>
         {AUTH_METHODS.map((m, i) => (
           <NavLink key={m.id} to={`/${m.id}`}>
-            <span className="num">{i + 1}</span>
+            <span className="num">{String(i + 1).padStart(2, '0')}</span>
             <span>{m.title}<small>{m.category}</small></span>
           </NavLink>
         ))}
+        <div className="sidebar-foot"><span className="g">■</span> granted &nbsp; <span className="r">■</span> denied</div>
       </nav>
       <main>
         <Routes>

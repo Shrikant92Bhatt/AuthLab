@@ -7,7 +7,8 @@ export function Home() {
   return (
     <div className="page">
       <header className="hero">
-        <h1>AuthLab – 9 ways to prove who you are</h1>
+        <div className="eyebrow">Authentication · Authorization · Federation</div>
+        <h1>9 ways to prove <span className="hl">who you are</span></h1>
         <p className="lead">
           Every method below runs for real against a Node.js backend with Redis and bcrypt. Pick one on the left, press the buttons,
           and watch the raw HTTP traffic. Demo users: {DEMO_USERS.map((u) => <code key={u.username}>{u.username} / {u.password}</code>)}.

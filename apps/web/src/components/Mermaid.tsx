@@ -3,11 +3,27 @@ import mermaid from 'mermaid';
 
 mermaid.initialize({
   startOnLoad: false,
-  theme: 'dark',
+  theme: 'base',
   securityLevel: 'strict',
-  fontFamily: 'Inter, system-ui, sans-serif',
+  fontFamily: "'Archivo', 'Helvetica Neue', Arial, sans-serif",
   sequence: { showSequenceNumbers: true, mirrorActors: false, messageAlign: 'left' },
-  themeVariables: { primaryColor: '#312e81', primaryBorderColor: '#6366f1', lineColor: '#94a3b8', fontSize: '14px' },
+  // Matches styles.css: black ink on white, green for the happy path, red for alerts.
+  themeVariables: {
+    fontSize: '14px',
+    background: '#ffffff',
+    primaryColor: '#ffffff', primaryTextColor: '#0b0b0b', primaryBorderColor: '#0b0b0b',
+    secondaryColor: '#e3f6e9', tertiaryColor: '#f6f5f0',
+    lineColor: '#0b0b0b', textColor: '#0b0b0b', mainBkg: '#ffffff', nodeBorder: '#0b0b0b',
+    clusterBkg: '#f6f5f0', clusterBorder: '#0b0b0b',
+    actorBkg: '#0b0b0b', actorBorder: '#0b0b0b', actorTextColor: '#ffffff', actorLineColor: '#9a9a93',
+    signalColor: '#0b0b0b', signalTextColor: '#0b0b0b',
+    labelBoxBkgColor: '#00a63e', labelBoxBorderColor: '#0b0b0b', labelTextColor: '#ffffff', loopTextColor: '#0b0b0b',
+    noteBkgColor: '#e3f6e9', noteBorderColor: '#00a63e', noteTextColor: '#0b0b0b',
+    activationBkgColor: '#e3f6e9', activationBorderColor: '#00a63e',
+    sequenceNumberColor: '#ffffff',
+    altBackground: '#fde6e4',
+    edgeLabelBackground: '#ffffff',
+  },
 });
 
 export function Mermaid({ code, title }: { code: string; title?: string }) {
