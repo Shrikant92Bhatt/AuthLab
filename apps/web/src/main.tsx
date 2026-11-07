@@ -8,12 +8,24 @@ import { BasicPage, DigestPage } from './pages/BasicDigest';
 import { ApiKeyPage, SessionPage } from './pages/ApiKeySession';
 import { JwtPage, TokensPage } from './pages/JwtTokens';
 import { OAuth2Callback, OAuth2Page, OidcPage, SamlPage } from './pages/Federation';
+import { setTheme, useTheme } from './lib/theme';
 import './styles.css';
 
 const PAGES: Record<string, () => React.JSX.Element> = {
   basic: BasicPage, digest: DigestPage, 'api-key': ApiKeyPage, session: SessionPage,
   jwt: JwtPage, tokens: TokensPage, oauth2: OAuth2Page, oidc: OidcPage, saml: SamlPage,
 };
+
+function ThemeSwitch() {
+  const theme = useTheme();
+  const next = theme === 'dark' ? 'light' : 'dark';
+  return (
+    <button className="theme-switch" onClick={() => setTheme(next)} aria-label={`Switch to ${next} mode`} title={`Switch to ${next} mode`}>
+      <span className={theme === 'dark' ? 'on' : ''}>Dark</span>
+      <span className={theme === 'light' ? 'on' : ''}>Light</span>
+    </button>
+  );
+}
 
 function App() {
   return (
@@ -29,7 +41,10 @@ function App() {
             <span>{m.title}<small>{m.category}</small></span>
           </NavLink>
         ))}
-        <div className="sidebar-foot"><span className="g">■</span> granted &nbsp; <span className="r">■</span> denied</div>
+        <div className="sidebar-foot">
+          <ThemeSwitch />
+          <span className="legend"><span className="g">■</span> granted &nbsp; <span className="r">■</span> denied</span>
+        </div>
       </nav>
       <main>
         <Routes>
