@@ -7,7 +7,8 @@ export function Home() {
   return (
     <div className="page">
       <header className="hero">
-        <h1>AuthLab – 9 ways to prove who you are</h1>
+        <div className="eyebrow">Authentication · Authorization · Federation</div>
+        <h1>9 ways to prove <span className="hl">who you are</span></h1>
         <p className="lead">
           Every method below runs for real against a Node.js backend with Redis and bcrypt. Pick one on the left, press the buttons,
           and watch the raw HTTP traffic. Demo users: {DEMO_USERS.map((u) => <code key={u.username}>{u.username} / {u.password}</code>)}.
@@ -21,17 +22,17 @@ export function Home() {
       <section className="panel">
         <h3>Comparison</h3>
         <div className="table-wrap">
-          <table>
+          <table className="compare">
             <thead><tr><th>Method</th><th>Kind</th><th>Answers</th><th>State</th><th>Best for</th><th>Avoid when</th></tr></thead>
             <tbody>
               {AUTH_METHODS.map((m) => (
                 <tr key={m.id}>
-                  <td><Link to={`/${m.id}`}>{m.title}</Link></td>
-                  <td><span className="pill cat">{m.category}</span></td>
-                  <td>{m.answers.join(', ')}</td>
-                  <td>{m.stateful ? 'Stateful' : 'Stateless'}</td>
-                  <td>{m.bestFor}</td>
-                  <td>{m.avoidWhen}</td>
+                  <td data-label="Method"><Link to={`/${m.id}`}>{m.title}</Link></td>
+                  <td data-label="Kind"><span className="pill cat">{m.category}</span></td>
+                  <td data-label="Answers">{m.answers.join(', ')}</td>
+                  <td data-label="State">{m.stateful ? 'Stateful' : 'Stateless'}</td>
+                  <td data-label="Best for">{m.bestFor}</td>
+                  <td data-label="Avoid when">{m.avoidWhen}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,13 +1,14 @@
 import type React from 'react';
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { AUTH_METHODS } from '@authlab/shared';
 import { Home } from './pages/Home';
 import { BasicPage, DigestPage } from './pages/BasicDigest';
 import { ApiKeyPage, SessionPage } from './pages/ApiKeySession';
 import { JwtPage, TokensPage } from './pages/JwtTokens';
 import { OAuth2Callback, OAuth2Page, OidcPage, SamlPage } from './pages/Federation';
+import { setTheme, useTheme } from './lib/theme';
 import './styles.css';
 
 const PAGES: Record<string, () => React.JSX.Element> = {
@@ -15,17 +16,43 @@ const PAGES: Record<string, () => React.JSX.Element> = {
   jwt: JwtPage, tokens: TokensPage, oauth2: OAuth2Page, oidc: OidcPage, saml: SamlPage,
 };
 
+function ThemeSwitch() {
+  const theme = useTheme();
+  const next = theme === 'dark' ? 'light' : 'dark';
+  return (
+    <button className="theme-switch" onClick={() => setTheme(next)} aria-label={`Switch to ${next} mode`} title={`Switch to ${next} mode`}>
+      <span className={theme === 'dark' ? 'on' : ''}>Dark</span>
+      <span className={theme === 'light' ? 'on' : ''}>Light</span>
+    </button>
+  );
+}
+
 function App() {
+  const { pathname } = useLocation();
+  // On phones the method list is a sideways strip: keep the current page's tab in view.
+  useEffect(() => {
+    document.querySelector('.nav-links a.active')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [pathname]);
+
   return (
     <div className="layout">
       <nav className="sidebar">
-        <NavLink to="/" end className="brand">🔐 AuthLab</NavLink>
-        {AUTH_METHODS.map((m, i) => (
-          <NavLink key={m.id} to={`/${m.id}`}>
-            <span className="num">{i + 1}</span>
-            <span>{m.title}<small>{m.category}</small></span>
-          </NavLink>
-        ))}
+        <NavLink to="/" end className="brand">
+          <span className="mark" aria-hidden="true" />Auth<span className="lab">Lab</span>
+          <span className="brand-tag">9 methods · live backend</span>
+        </NavLink>
+        <div className="nav-links">
+          {AUTH_METHODS.map((m, i) => (
+            <NavLink key={m.id} to={`/${m.id}`}>
+              <span className="num">{String(i + 1).padStart(2, '0')}</span>
+              <span>{m.title}<small>{m.category}</small></span>
+            </NavLink>
+          ))}
+        </div>
+        <div className="sidebar-foot">
+          <ThemeSwitch />
+          <span className="legend"><span className="g">■</span> granted &nbsp; <span className="r">■</span> denied</span>
+        </div>
       </nav>
       <main>
         <Routes>
