@@ -84,17 +84,19 @@ AuthLab deploys as **two Vercel projects** from this one repo (both with Root Di
 
 `tools/vercel-build.mts` writes Vercel's [Build Output API](https://vercel.com/docs/build-output-api/v3) to `.vercel/output`: esbuild bundles our TypeScript, `@vercel/nft` copies the npm packages it needs (including bcrypt's native binary).
 
-Serverless instances don't share a disk, so keys can't be generated at startup. Run `npm run keys` to write `.env.vercel` with fresh keys and secrets, then set these env vars:
+**Required:** connect a Redis database to **both** projects (Vercel → Storage → Upstash for Redis). Its `REDIS_URL` / `KV_URL` is picked up automatically. Until then every request answers `503 Server is not ready` with the reason.
+
+Signing keys: serverless instances don't share a disk, so on Vercel the first instance generates each key and stores it in Redis (`keys:*`, `SET NX`); every other instance reads the same one. To manage keys yourself instead, run `npm run keys` and set them as env vars (they take precedence).
 
 | Variable | web | auth |
 |---|---|---|
 | `NODE_ENV=production` | ✓ | ✓ |
-| `REDIS_URL` (or `KV_URL`, e.g. Upstash from the Vercel Marketplace) | ✓ | ✓ |
+| `REDIS_URL` or `KV_URL` (set by the Redis integration) | ✓ | ✓ |
 | `WEB_ORIGIN` = `API_ORIGIN` = the web URL | ✓ | `WEB_ORIGIN` only |
 | `ISSUER` = the auth URL, and `VITE_AUTH_SERVER` (same value, used at build time) | ✓ | `ISSUER` only |
-| `OIDC_CLIENT_SECRET` (same value in both) | ✓ | ✓ |
-| `SESSION_SECRET`, `API_JWT_PRIVATE_KEY_PEM` | ✓ | |
-| `AUTH_SERVER_JWT_PRIVATE_KEY_PEM`, `IDP_SAML_KEY_PEM`, `IDP_SAML_CERT_PEM` | | ✓ |
+| Optional: `OIDC_CLIENT_SECRET` (same value in both) | ✓ | ✓ |
+| Optional: `SESSION_SECRET`, `API_JWT_PRIVATE_KEY_PEM` | ✓ | |
+| Optional: `AUTH_SERVER_JWT_PRIVATE_KEY_PEM`, `IDP_SAML_KEY_PEM`, `IDP_SAML_CERT_PEM` | | ✓ |
 
 Deploy to **production** (or turn off Deployment Protection for previews): the API calls the auth server server-to-server, and a protected preview URL would answer with a Vercel login page.
 
