@@ -10,6 +10,9 @@ let client: Redis | undefined;
 
 export function getRedis(): Redis {
   if (!client) {
+    if (process.env.VERCEL && !process.env.REDIS_URL && !process.env.KV_URL) {
+      throw new Error('Redis is not connected. In Vercel, add a Redis database (Storage → Upstash for Redis) and connect it to this project, then redeploy.');
+    }
     client = new Redis(env.REDIS_URL, { maxRetriesPerRequest: 3, lazyConnect: false });
     client.on('error', (e) => console.error('[redis]', e.message));
   }
